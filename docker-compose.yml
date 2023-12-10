@@ -1,0 +1,62 @@
+version: '3.8'
+
+volumes:
+  userdb_vol:
+  productdb_vol:
+
+networks:
+  micro_network:
+
+services:
+  user_api:
+    container_name: user-service-container
+    build:
+      context: ./user_service
+    ports:
+      - "5001:5001"
+    depends_on:
+      - user_service_db
+    networks:
+      - micro_network
+    restart: always
+
+  product_api:
+    container_name: product-service-container
+    build:
+      context: ./product_service
+      # dockerfile: ./product_service/Dockerfile
+    ports:
+      - "5002:5002"
+    depends_on:
+      - product_service_db
+    networks:
+      - micro_network
+    restart: always
+
+  user_service_db:
+    container_name: user_service_db_con
+    image: mysql:8
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: $(MYSQL_ROOT_PASSWORD)
+      MYSQL_DATABASE: $(MYSQL_DATABASE)
+      MYSQL_USER: $(MYSQL_USER)
+      MYSQL_PASSWORD: $(MYSQL_PASSWORD)
+    networks:
+      - micro_network
+    volumes:
+      - userdb_vol:/var/lib/mysql
+
+  product_service_db:
+    container_name: product_sevice_con
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: $(POSTGRES_USER)
+      POSTGRES_PASSWORD: $(POSTGRES_PASSWORD)
+    networks:
+      - micro_network
+    volumes:
+      - productdb_vol:/var/lib/postgresql/data
