@@ -1,0 +1,67 @@
+swagger: "2.0"
+info:
+  title: "Product API"
+  description: "API for managing products"
+  version: "1.0.0"
+paths:
+  /api/products:
+    get:
+      summary: "Get all products"
+      responses:
+        200:
+          description: "A list of products"
+  /api/product/{slug}:
+    get:
+      summary: "Get a product by slug"
+      parameters:
+        - name: "slug"
+          in: "path"
+          required: true
+          type: "string"
+          description: "Slug of the product"
+      responses:
+        200:
+          description: "Details of the requested product"
+        404:
+          description: "Product not found"
+  /api/product/create:
+    post:
+      summary: "Create a new product"
+      parameters:
+        - name: "name"
+          in: "formData"
+          required: true
+          type: "string"
+          description: "Name of the product"
+        - name: "price"
+          in: "formData"
+          required: true
+          type: "number"
+          description: "Price of the product"
+        - name: "slug"
+          in: "formData"
+          required: true
+          type: "string"
+          description: "Slug of the product"
+        - name: "image"
+          in: "formData"
+          required: false
+          type: "string"
+          description: "Image URL of the product"
+      responses:
+        200:
+          description: "Product added successfully"
+  /api/product/delete/{slug}:
+    post:
+      summary: "Delete a product by slug"
+      parameters:
+        - name: "slug"
+          in: "path"
+          required: true
+          type: "string"
+          description: "Slug of the product to be deleted"
+      responses:
+        200:
+          description: "Product deleted successfully"
+        404:
+          description: "Product not found"
