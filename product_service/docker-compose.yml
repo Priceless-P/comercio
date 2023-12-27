@@ -1,0 +1,33 @@
+version: '3.9'
+
+volumes:
+  productdb_vol:
+
+networks:
+  micro_network:
+
+services:
+  product_api:
+    container_name: product-service-container
+    build:
+      context: .
+    ports:
+      - "5002:5002"
+    depends_on:
+      - product_service_db
+    networks:
+      - micro_network
+    restart: always
+
+  product_service_db:
+    container_name: product_sevice_con
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: $(POSTGRES_PASSWORD)
+    networks:
+      - micro_network
+    volumes:
+      - productdb_vol:/var/lib/postgresql/data
